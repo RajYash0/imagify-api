@@ -10,7 +10,13 @@ const PORT = process.env.PORT || 4000;
 const app = express();
 
 app.use(express.json());
-app.use(cors());
+
+app.use(
+  cors({
+    origin: ["https://imagify-alpha-three.vercel.app/"],
+    credentials: true,
+  })
+);
 
 await connectDB();
 
