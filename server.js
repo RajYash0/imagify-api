@@ -7,24 +7,36 @@ import imageRouter from "./routes/imageRoutes.js";
 import userRouter from "./routes/userRoutes.js";
 
 const PORT = process.env.PORT || 4000;
+const CLIENT_URL =
+  process.env.CLIENT_URL || "https://imagify-alpha-three.vercel.app";
+
 const app = express();
 
+// Middleware
 app.use(express.json());
 
+// ✅ Fixed CORS configuration
 app.use(
   cors({
-    origin: ["https://imagify-alpha-three.vercel.app"],
+    origin: CLIENT_URL, // no trailing slash
     credentials: true,
+    methods: ["GET", "POST", "PUT", "DELETE"],
   })
 );
 
-app.options("*", cors());
-
+// ✅ Connect to MongoDB
 await connectDB();
 
+// ✅ API Routes
 app.use("/api/user", userRouter);
 app.use("/api/image", imageRouter);
 
-app.get("/", (req, res) => res.send("API Working"));
+// ✅ Test Route
+app.get("/", (req, res) => {
+  res.send("Imagify API is working ✅");
+});
 
-app.listen(PORT, () => console.log(`Server running on port: ${PORT}`));
+// Start server
+app.listen(PORT, () => {
+  console.log(`🚀 Server running on port ${PORT}`);
+});
